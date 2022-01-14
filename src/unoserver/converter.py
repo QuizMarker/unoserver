@@ -17,7 +17,7 @@ import unohelper
 from com.sun.star.beans import PropertyValue
 from com.sun.star.io import XOutputStream
 
-logger = logging.getLogger("unoserver")
+# logger = logging.getLogger("unoserver")
 
 SFX_FILTER_IMPORT = 1
 SFX_FILTER_EXPORT = 2
@@ -31,6 +31,9 @@ DOC_TYPES = {
     "com.sun.star.script.BasicIDE",
 }
 
+# INFO:unoserver:com.sun.star.drawing.DrawingDocument
+# INFO:unoserver:pdf_Portable_Document_Format
+# INFO:unoserver:draw_pdf_Export
 
 def prop2dict(properties):
     return {p.Name: p.Value for p in properties}
@@ -63,7 +66,7 @@ class OutputStream(unohelper.Base, XOutputStream):
 
 class UnoConverter:
     def __init__(self, interface="127.0.0.1", port="2002"):
-        logger.info("Starting unoconverter.")
+        # logger.info("Starting unoconverter.")
 
         self.local_context = uno.getComponentContext()
         self.resolver = self.local_context.ServiceManager.createInstanceWithContext(
@@ -137,7 +140,7 @@ class UnoConverter:
             # Load the document
             import_path = uno.systemPathToFileUrl(os.path.abspath(inpath))
             # This returned None if the file was locked, I'm hoping the ReadOnly flag avoids that.
-            logger.info(f"Opening {inpath}")
+            # logger.info(f"Opening {inpath}")
 
         elif indata:
             # The document content is passed in as a byte string
@@ -163,12 +166,13 @@ class UnoConverter:
                 export_path = "private:stream"
 
             # Figure out the output type:
-            if convert_to:
-                export_type = self.type_service.queryTypeByURL(
-                    f"file:///dummy.{convert_to}"
-                )
-            else:
-                export_type = self.type_service.queryTypeByURL(export_path)
+            export_type = "pdf_Portable_Document_Format"
+            # if convert_to:
+            #     export_type = self.type_service.queryTypeByURL(
+            #         f"file:///dummy.{convert_to}"
+            #     )
+            # else:
+            #     export_type = self.type_service.queryTypeByURL(export_path)
 
             if not export_type:
                 if convert_to:
@@ -179,14 +183,15 @@ class UnoConverter:
                     f"Unknown export file type, unknown extension '{extension}'"
                 )
 
-            filtername = self.find_filter(import_type, export_type)
+            filtername = "draw_pdf_Export"
+            # filtername = self.find_filter(import_type, export_type)
             if filtername is None:
                 raise RuntimeError(
                     f"Could not find an export filter from {import_type} to {export_type}"
                 )
 
-            logger.info(f"Exporting to {outpath}")
-            logger.info(f"Using {filtername} export filter")
+            # logger.info(f"Exporting to {outpath}")
+            # logger.info(f"Using {filtername} export filter")
 
             output_props = (
                 PropertyValue(Name="FilterName", Value=filtername),
@@ -209,8 +214,8 @@ class UnoConverter:
 
 
 def main():
-    logging.basicConfig()
-    logger.setLevel(logging.DEBUG)
+    # logging.basicConfig()
+    # logger.setLevel(logging.DEBUG)
 
     parser = argparse.ArgumentParser("unoconvert")
     parser.add_argument(
