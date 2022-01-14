@@ -22,10 +22,10 @@ from com.sun.star.io import XOutputStream
 SFX_FILTER_IMPORT = 1
 SFX_FILTER_EXPORT = 2
 DOC_TYPES = {
+    "com.sun.star.drawing.DrawingDocument",
     "com.sun.star.sheet.SpreadsheetDocument",
     "com.sun.star.text.TextDocument",
     "com.sun.star.presentation.PresentationDocument",
-    "com.sun.star.drawing.DrawingDocument",
     "com.sun.star.sdb.DocumentDataSource",
     "com.sun.star.formula.FormulaProperties",
     "com.sun.star.script.BasicIDE",
